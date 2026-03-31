@@ -1,0 +1,377 @@
+:root{
+  --bg:#f6f1ea;
+  --card:#fff;
+  --ink:#2d2a26;
+  --muted:#7a7167;
+  --line:#e7ded3;
+  --accent:#f07b1a;
+  --danger:#d64545;
+  --shadow: 0 8px 30px rgba(0,0,0,.06);
+
+  /* ✅ novos para "Abrir/Fechar mesas" */
+  --ok:#2ecc71;
+  --okBg: rgba(46,204,113,.16);
+  --okLine: rgba(46,204,113,.42);
+
+  --stop:#e74c3c;
+  --stopBg: rgba(231,76,60,.16);
+  --stopLine: rgba(231,76,60,.42);
+
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+}
+
+*{ box-sizing:border-box; }
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+}
+
+.wrap{
+  max-width:980px;
+  margin:0 auto;
+  padding:18px;
+}
+
+.hdr{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:14px;
+  padding:14px 14px;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:18px;
+  box-shadow: var(--shadow);
+}
+
+.hdr h1{ margin:0; font-size:20px; }
+.hdr p{ margin:6px 0 0; color:var(--muted); font-size:12px; }
+
+.right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding-top:2px;
+}
+
+/* ✅ pill base */
+.pill{
+  padding:6px 10px;
+  border-radius:999px;
+  background:#eaf2ff;
+  color:#1f4fa3;
+  font-weight:800;
+  font-size:12px;
+}
+
+/* ✅ pill estado mesas */
+#orderingPill{
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--ink);
+}
+#orderingPill.is-open{
+  background: var(--okBg);
+  border-color: var(--okLine);
+  color: #1e7a3a;
+}
+#orderingPill.is-closed{
+  background: var(--stopBg);
+  border-color: var(--stopLine);
+  color: var(--stop);
+}
+
+/* botão base */
+button{
+  padding:10px 12px;
+  border:0;
+  border-radius:12px;
+  background:var(--accent);
+  color:#fff;
+  font-weight:800;
+  cursor:pointer;
+}
+
+button.ghost{
+  background:#fff;
+  color:var(--ink);
+  border:1px solid var(--line);
+}
+
+button:disabled{
+  opacity:.55;
+  cursor:not-allowed;
+}
+
+.main{ margin-top:16px; }
+
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:16px;
+  box-shadow: var(--shadow);
+}
+
+.card-h{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.card h2{
+  margin:0;
+  font-size:18px;
+}
+
+.muted{
+  color:var(--muted);
+  font-size:13px;
+}
+
+/* ---------------- Filters ---------------- */
+
+.filters{
+  margin-top:10px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  align-items:center;
+}
+
+.chip{
+  padding:8px 10px;
+  border-radius:999px;
+  background:#fff;
+  border:1px solid var(--line);
+  color:var(--ink);
+  font-weight:800;
+  font-size:12px;
+}
+
+.chip.active{
+  border-color: rgba(240,123,26,.35);
+  background: rgba(240,123,26,.10);
+}
+
+/* ---------------- Orders list ---------------- */
+
+.orders-empty{
+  margin-top:14px;
+  padding:20px;
+  text-align:center;
+  border:1px dashed var(--line);
+  border-radius:14px;
+  color:var(--muted);
+  font-size:14px;
+  background:#faf7f3;
+}
+
+.orders{
+  margin-top:14px;
+  display:grid;
+  gap:12px;
+}
+
+.order{
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:12px;
+  background:#fff;
+}
+
+.order-top{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.order-title{
+  font-weight:900;
+  font-size:14px;
+}
+
+.order-sub{
+  margin-top:4px;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:6px 10px;
+  border-radius:999px;
+  font-weight:900;
+  font-size:12px;
+  border:1px solid var(--line);
+  background:#fff;
+}
+
+.badge.novo{ background: rgba(240,123,26,.12); border-color: rgba(240,123,26,.30); }
+.badge.preparar{ background: rgba(31,79,163,.10); border-color: rgba(31,79,163,.25); color:#1f4fa3; }
+.badge.pronto{ background: rgba(52,168,83,.12); border-color: rgba(52,168,83,.30); color:#1e7a3a; }
+.badge.entregue{ background: rgba(45,42,38,.08); }
+.badge.cancelado{ background: rgba(214,69,69,.12); border-color: rgba(214,69,69,.30); color: var(--danger); }
+
+.order-items-preview{
+  margin-top:10px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.35;
+}
+
+.order-actions{
+  margin-top:12px;
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.btn{
+  padding:10px 12px;
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--ink);
+  border-radius:12px;
+  font-weight:900;
+}
+
+/* ✅ botão principal */
+.btn.primary{
+  background:var(--accent);
+  color:#fff;
+  border-color: transparent;
+}
+
+/* ✅ botão danger */
+.btn.danger{
+  background:var(--danger);
+  color:#fff;
+  border-color: transparent;
+}
+
+/* ✅ botões Abrir/Fechar na header: ficam “pílula” e consistentes */
+#btnOpenOrdering.btn{
+  border-radius:999px;
+}
+#btnCloseOrdering.btn{
+  border-radius:999px;
+}
+
+/* ---------------- Modal ---------------- */
+
+.hidden{ display:none !important; }
+
+.modal{
+  position:fixed;
+  inset:0;
+  background: rgba(0,0,0,.35);
+  display:none;
+  align-items:flex-end;
+  justify-content:center;
+  padding:14px;
+  z-index:50;
+}
+
+.modal.open{ display:flex; }
+
+.sheet{
+  width:min(720px, 100%);
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:18px;
+  box-shadow: var(--shadow);
+  overflow:hidden;
+}
+
+.sheet-h{
+  padding:14px;
+  border-bottom:1px solid var(--line);
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.sheet-title{ font-weight:1000; font-size:15px; }
+.sheet-sub{ margin-top:4px; font-size:12px; color:var(--muted); }
+
+.sheet-body{ padding:14px; }
+
+.order-items{
+  display:grid;
+  gap:10px;
+}
+
+.order-item{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:10px 12px;
+  background:#fff;
+}
+
+.order-item .name{ font-weight:900; font-size:13px; }
+.order-item .sub{ margin-top:3px; color:var(--muted); font-size:12px; }
+
+.order-item .right{
+  text-align:right;
+  font-weight:900;
+  font-size:13px;
+}
+
+.label{
+  margin-top:14px;
+  font-weight:900;
+  font-size:12px;
+  color:var(--muted);
+}
+
+.notes{
+  margin-top:6px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:10px 12px;
+  background:#faf7f3;
+  font-size:13px;
+}
+
+.order-total{
+  margin-top:14px;
+  display:flex;
+  justify-content:space-between;
+  font-weight:1000;
+  font-size:14px;
+}
+
+.sheet-footer{
+  padding:14px;
+  border-top:1px solid var(--line);
+}
+
+.status-actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+/* mobile tweaks */
+@media (max-width: 520px){
+  .hdr{ flex-direction:column; align-items:stretch; }
+  .right{ justify-content:space-between; }
+  .card-h{ flex-direction:column; align-items:flex-start; }
+}
+
+.badge.pago{
+  background: rgba(46, 204, 113, .18);
+  border: 1px solid rgba(46, 204, 113, .45);
+  color: #2ecc71;
+}

@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin</title>
+  <link rel="stylesheet" href="admin.css" />
+  <link rel="icon" type="image/jpeg" href="/bizaslogobranco.png" />
+  <style>
+    .fat-result-box {
+      display: inline-block;
+      border: 2px solid #222;
+      border-radius: 14px;
+      padding: 24px 32px;
+      margin-top: 8px;
+      background: #f9f9f9;
+      text-align: center;
+    }
+    .fat-result-label {
+      font-size: .85rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: #666;
+      margin-bottom: 4px;
+    }
+    .fat-result-period {
+      font-size: .9rem;
+      color: #444;
+      margin-bottom: 12px;
+    }
+    .fat-result-value {
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: #111;
+    }
+    .fat-shortcuts {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hdr">
+      <div>
+        <h1>Bizas &amp; Bar</h1>
+        <p>Painel Admin — Categorias</p>
+
+        <!-- Tabs -->
+        <div class="admin-tabs">
+          <button id="tabProdutos"  class="tab-btn active" type="button">Produtos</button>
+          <button id="tabMesas"     class="tab-btn"        type="button">Mesas</button>
+          <button id="tabCartazes"  class="tab-btn"        type="button">Cartazes</button>
+          <button id="tabFaturacao" class="tab-btn"        type="button">Faturação</button>
+        </div>
+      </div>
+
+      <div class="right">
+        <span class="pill">Admin</span>
+        <button class="ghost" id="btnLogout" type="button">Sair</button>
+      </div>
+    </header>
+
+    <!-- SECÇÃO PRODUTOS (default) -->
+    <section id="secProdutos">
+      <section class="card">
+        <div class="card-h">
+          <h2>Criar Categoria</h2>
+          <button class="ghost" id="btnRefresh" type="button">Atualizar</button>
+        </div>
+
+        <form class="form-cat" id="categoryForm">
+          <div class="field">
+            <label>Nome da categoria</label>
+            <input name="categoryName" placeholder="Ex: Cervejas" required />
+          </div>
+
+          <div class="field">
+            <label>Tipo</label>
+            <select name="categoryType" required>
+              <option value="bebida">Bebida</option>
+              <option value="comida">Comida</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Imagem (ex: Sagres)</label>
+            <input id="categoryImage" type="file" accept="image/*" />
+          </div>
+
+          <div class="image-preview" id="imagePreview" aria-hidden="true">
+            <div class="preview-box">
+              <span class="preview-hint">Pré-visualização</span>
+              <img id="previewImg" alt="Pré-visualização da imagem" />
+            </div>
+          </div>
+
+          <div class="actions-row">
+            <button type="submit">Guardar categoria</button>
+            <button class="ghost" type="button" id="btnClear">Limpar</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="card">
+        <div class="card-h">
+          <h2>Categorias</h2>
+        </div>
+        <div class="list" id="categoriesList"></div>
+      </section>
+    </section>
+
+    <!-- SECÇÃO MESAS -->
+    <section id="secMesas" class="hidden">
+      <section class="card">
+        <div class="card-h">
+          <h2>Criar Mesa</h2>
+          <button class="ghost" id="btnRefreshMesas" type="button">Atualizar</button>
+        </div>
+
+        <form class="form-cat" id="tableForm">
+          <div class="field">
+            <label>Número / Nome da mesa</label>
+            <input name="tableName" placeholder="Ex: 7 ou Mesa 7" required />
+          </div>
+
+          <div class="actions-row">
+            <button type="submit">Criar mesa</button>
+            <button class="ghost" type="button" id="btnClearMesa">Limpar</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="card">
+        <div class="card-h">
+          <h2>Mesas</h2>
+        </div>
+        <div class="list" id="tablesList"></div>
+      </section>
+    </section>
+
+    <!-- SECÇÃO CARTAZES -->
+    <section id="secCartazes" class="hidden">
+      <section class="card">
+        <div class="card-h">
+          <h2>Carregar cartaz</h2>
+          <button class="ghost" id="btnRefreshCartazes" type="button">Atualizar</button>
+        </div>
+
+        <form class="form-cat" id="cartazForm">
+          <div class="field">
+            <label>Ficheiro (imagem)</label>
+            <input id="cartazFile" name="cartaz" type="file" accept="image/*" required />
+          </div>
+
+          <div class="actions-row">
+            <button type="submit">Guardar cartaz</button>
+            <button class="ghost" type="reset">Limpar</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="card">
+        <div class="card-h">
+          <h2>Cartazes</h2>
+        </div>
+        <div class="list" id="cartazesList"></div>
+      </section>
+    </section>
+
+    <!-- SECÇÃO FATURAÇÃO -->
+    <section id="secFaturacao" class="hidden">
+      <section class="card">
+        <div class="card-h">
+          <h2>Faturação</h2>
+        </div>
+
+        <!-- Atalhos rápidos -->
+        <div class="fat-shortcuts">
+          <button class="ghost" type="button" data-fat-period="hoje">Hoje</button>
+          <button class="ghost" type="button" data-fat-period="semana">Últimos 7 dias</button>
+          <button class="ghost" type="button" data-fat-period="mes">Este mês</button>
+          <button class="ghost" type="button" data-fat-period="mes-passado">Mês passado</button>
+        </div>
+
+        <!-- Seletor de datas -->
+        <div class="form-cat">
+          <div class="field">
+            <label for="fatStart">Desde</label>
+            <input type="date" id="fatStart" />
+          </div>
+          <div class="field">
+            <label for="fatEnd">Até</label>
+            <input type="date" id="fatEnd" />
+          </div>
+          <div class="actions-row">
+            <button type="button" id="btnCalcFaturacao">Ver total</button>
+          </div>
+        </div>
+
+        <!-- Loading -->
+        <div id="fatLoading" class="hidden" style="margin:12px 0; color:#888;">A calcular…</div>
+
+        <!-- Resultado -->
+        <div id="fatResult" class="hidden"></div>
+      </section>
+    </section>
+
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+  <script src="admin.js" defer></script>
+</body>
+</html>

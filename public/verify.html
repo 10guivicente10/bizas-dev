@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Verificação — Bizas & Bar</title>
+  <link rel="icon" type="image/jpeg" href="/bizaslogobranco.png" />
+
+  <style>
+    :root {
+      --bg: #f6f1ea; --card: #fff; --ink: #2d2a26; --muted: #7a7167;
+      --line: #e7ded3; --accent: #f07b1a; --danger: #c0392b;
+      --shadow: 0 8px 30px rgba(0,0,0,.06);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg); color: var(--ink);
+      min-height: 100svh; display: flex;
+      align-items: center; justify-content: center; padding: 18px;
+    }
+    .card {
+      background: var(--card); border: 1px solid var(--line);
+      border-radius: 24px; box-shadow: var(--shadow);
+      padding: 28px 24px; width: min(420px, 100%);
+    }
+    .logo { font-size: 32px; text-align: center; margin-bottom: 8px; }
+    h1 { font-size: 20px; text-align: center; margin-bottom: 6px; }
+    .sub { font-size: 13px; color: var(--muted); text-align: center; margin-bottom: 24px; line-height: 1.5; }
+    .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+    label { font-size: 12px; color: var(--muted); font-weight: 600; }
+    input {
+      padding: 12px 14px; border: 1px solid var(--line);
+      border-radius: 14px; font-size: 16px; outline: none;
+      transition: border-color .15s; width: 100%;
+    }
+    input:focus { border-color: var(--accent); }
+    .prefix-wrap { display: flex; gap: 8px; }
+    .prefix {
+      padding: 12px 14px; border: 1px solid var(--line);
+      border-radius: 14px; background: #faf7f3; font-size: 16px;
+      color: var(--muted); white-space: nowrap; flex: 0 0 auto;
+    }
+    button {
+      width: 100%; padding: 14px; border: none; border-radius: 14px;
+      background: var(--accent); color: #fff; font-size: 16px;
+      font-weight: 800; cursor: pointer; transition: opacity .15s, transform .06s; margin-top: 4px;
+    }
+    button:active { transform: scale(.98); }
+    button:disabled { opacity: .5; cursor: not-allowed; }
+    .btn-ghost {
+      background: #fff; color: var(--ink);
+      border: 1px solid var(--line); margin-top: 10px; font-size: 14px;
+    }
+    .error {
+      background: #fde8e8; border: 1px solid #f5c6c6;
+      border-radius: 12px; padding: 10px 14px; font-size: 13px;
+      color: var(--danger); margin-bottom: 14px; display: none;
+    }
+    .error.show { display: block; }
+    .info {
+      background: #e8f4fd; border: 1px solid #bde0f7;
+      border-radius: 12px; padding: 10px 14px; font-size: 13px;
+      color: #1a6896; margin-bottom: 14px; display: none;
+    }
+    .info.show { display: block; }
+    .otp-wrap { display: flex; gap: 8px; justify-content: center; margin-bottom: 14px; }
+    .otp-digit {
+      width: 48px; height: 58px; text-align: center;
+      font-size: 24px; font-weight: 800; border: 1px solid var(--line);
+      border-radius: 14px; outline: none; transition: border-color .15s;
+    }
+    .otp-digit:focus { border-color: var(--accent); }
+    .step { display: none; }
+    .step.active { display: block; }
+    .timer { font-size: 12px; color: var(--muted); text-align: center; margin-top: 10px; }
+    .timer span { color: var(--accent); font-weight: 700; }
+    .grecaptcha-badge { visibility: hidden !important; }
+    .user-info-box {
+      background: #faf7f3; border: 1px solid var(--line);
+      border-radius: 14px; padding: 12px 14px; margin-bottom: 16px;
+      font-size: 14px; display: flex; align-items: center; gap: 10px;
+    }
+    .user-info-box .avatar { font-size: 24px; }
+    .user-info-box .details { flex: 1; }
+    .user-info-box .name { font-weight: 800; }
+    .user-info-box .phone { color: var(--muted); font-size: 12px; margin-top: 2px; }
+    .change-link { font-size: 12px; color: var(--accent); cursor: pointer; text-decoration: underline; margin-top: 10px; text-align: center; display: block; }
+  </style>
+</head>
+<body>
+<div class="card">
+  <div class="logo"><img src="/bizaslogo.png" style="width:80px;height:80px;object-fit:contain;border-radius:16px;" /></div>
+
+  <!-- PASSO 1: Nome + Telemóvel (só na 1ª vez) -->
+  <div id="step1" class="step active">
+    <h1>Bem-vindo!</h1>
+    <p class="sub">Introduz o teu nome e telemóvel para acederes ao menu.</p>
+    <div id="err1" class="error"></div>
+    <div class="field">
+      <label for="inputName">Nome</label>
+      <input id="inputName" type="text" placeholder="O teu nome" autocomplete="given-name" />
+    </div>
+    <div class="field">
+      <label for="inputPhone">Telemóvel</label>
+      <div class="prefix-wrap">
+        <div class="prefix">🇵🇹 +351</div>
+        <input id="inputPhone" type="tel" placeholder="9XXXXXXXX" inputmode="tel" maxlength="9" />
+      </div>
+    </div>
+    <div id="recaptcha-container"></div>
+    <button id="btnSendSms">Enviar código SMS</button>
+  </div>
+
+  <!-- PASSO 1B: Utilizador conhecido — só pede o código -->
+  <div id="step1b" class="step">
+    <h1>Verificação</h1>
+    <p class="sub">A tua verificação expirou. Envia um novo código para confirmares.</p>
+    <div id="err1b" class="error"></div>
+    <div class="user-info-box">
+      <div class="avatar">👤</div>
+      <div class="details">
+        <div class="name" id="knownName"></div>
+        <div class="phone" id="knownPhone"></div>
+      </div>
+    </div>
+    <div id="recaptcha-container-b"></div>
+    <button id="btnSendSmsB">Enviar código SMS</button>
+  </div>
+
+  <!-- PASSO 2: Código OTP -->
+  <div id="step2" class="step">
+    <h1>Código de verificação</h1>
+    <p class="sub" id="step2Sub">Introduz o código de 6 dígitos enviado para o teu telemóvel.</p>
+    <div id="err2" class="error"></div>
+    <div id="info2" class="info"></div>
+    <div class="otp-wrap">
+      <input class="otp-digit" type="tel" maxlength="1" inputmode="numeric" />
+      <input class="otp-digit" type="tel" maxlength="1" inputmode="numeric" />
+      <input class="otp-digit" type="tel" maxlength="1" inputmode="numeric" />
+      <input class="otp-digit" type="tel" maxlength="1" inputmode="numeric" />
+      <input class="otp-digit" type="tel" maxlength="1" inputmode="numeric" />
+      <input class="otp-digit" type="tel" maxlength="1" inputmode="numeric" />
+    </div>
+    <button id="btnVerify">Verificar e entrar</button>
+    <button class="btn-ghost" id="btnResend">Reenviar código</button>
+    <button class="btn-ghost" id="btnBack">← Voltar</button>
+    <div class="timer" id="timerWrap" style="display:none">
+      Podes reenviar em <span id="timerCount">60</span>s
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyDkj9iU66EEM-MV68eEdDd5y9MqtfRfLeA",
+  authDomain: "bizas-46e04.firebaseapp.com",
+  projectId: "bizas-46e04",
+  storageBucket: "bizas-46e04.firebasestorage.app",
+  messagingSenderId: "230501860494",
+  appId: "1:230501860494:web:3c1183da74b65cfa6435df"
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+auth.languageCode = "pt-PT";
+
+const USER_KEY  = "bizas_user_v1";
+const TTL_MS = 3 * 24 * 60 * 60 * 1000; // 3 dias
+
+const urlParams = new URLSearchParams(window.location.search);
+const mesaToken = urlParams.get("token") || "";
+const mesaPass  = urlParams.get("pass")  || "";
+
+// ── Verifica se já está válido ──────────────────────────────
+(function checkAlreadyVerified() {
+  try {
+    const u = JSON.parse(localStorage.getItem(USER_KEY) || "null");
+    if (u?.name && u?.phone && u?.verifiedAt && Date.now() - u.verifiedAt < TTL_MS) {
+      goToMenu();
+    }
+  } catch {}
+})();
+
+function goToMenu() {
+  window.location.href = mesaToken ? `/t/${encodeURIComponent(mesaToken)}` : "/";
+}
+
+function loadUser() {
+  try { return JSON.parse(localStorage.getItem(USER_KEY) || "null"); } catch { return null; }
+}
+
+// ── Decide qual passo mostrar ───────────────────────────────
+const existingUser = loadUser();
+const step1El  = document.getElementById("step1");
+const step1bEl = document.getElementById("step1b");
+const step2El  = document.getElementById("step2");
+
+let verifiedName  = "";
+let verifiedPhone = "";
+
+if (existingUser?.name && existingUser?.phone) {
+  // Utilizador conhecido — salta para o passo 1B
+  verifiedName  = existingUser.name;
+  verifiedPhone = existingUser.phone;
+  document.getElementById("knownName").textContent  = existingUser.name;
+  document.getElementById("knownPhone").textContent = "+351 " + existingUser.phone;
+  step1El.classList.remove("active");
+  step1bEl.classList.add("active");
+}
+
+// Elementos
+const err1       = document.getElementById("err1");
+const err1b      = document.getElementById("err1b");
+const err2       = document.getElementById("err2");
+const info2      = document.getElementById("info2");
+const step2Sub   = document.getElementById("step2Sub");
+const btnSend    = document.getElementById("btnSendSms");
+const btnSendB   = document.getElementById("btnSendSmsB");
+const btnVerify  = document.getElementById("btnVerify");
+const btnResend  = document.getElementById("btnResend");
+const btnBack    = document.getElementById("btnBack");
+const timerWrap  = document.getElementById("timerWrap");
+const timerCount = document.getElementById("timerCount");
+const otpDigits  = Array.from(document.querySelectorAll(".otp-digit"));
+
+let confirmationResult = null;
+let timerInterval      = null;
+
+function showErr(el, msg)  { el.textContent = msg; el.classList.add("show"); }
+function clearErr(el)      { el.textContent = ""; el.classList.remove("show"); }
+function showInfo(el, msg) { el.textContent = msg; el.classList.add("show"); }
+function clearInfo(el)     { el.textContent = ""; el.classList.remove("show"); }
+
+function isValidPtMobile(v) {
+  return /^9\d{8}$/.test(v.replace(/\s/g, "").replace(/^(00351|\+351)/, ""));
+}
+
+function getOtpValue() { return otpDigits.map(d => d.value).join(""); }
+function clearOtp() { otpDigits.forEach(d => { d.value = ""; }); otpDigits[0].focus(); }
+
+function startResendTimer(s = 60) {
+  clearInterval(timerInterval);
+  timerWrap.style.display = "block";
+  btnResend.disabled = true;
+  let left = s;
+  timerCount.textContent = left;
+  timerInterval = setInterval(() => {
+    left--;
+    timerCount.textContent = left;
+    if (left <= 0) { clearInterval(timerInterval); timerWrap.style.display = "none"; btnResend.disabled = false; }
+  }, 1000);
+}
+
+otpDigits.forEach((input, i) => {
+  input.addEventListener("input", () => {
+    input.value = input.value.replace(/\D/, "");
+    if (input.value && i < otpDigits.length - 1) otpDigits[i + 1].focus();
+  });
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Backspace" && !input.value && i > 0) otpDigits[i - 1].focus();
+  });
+  input.addEventListener("paste", (e) => {
+    e.preventDefault();
+    const p = (e.clipboardData || window.clipboardData).getData("text").replace(/\D/g, "").slice(0, 6);
+    p.split("").forEach((ch, idx) => { if (otpDigits[idx]) otpDigits[idx].value = ch; });
+    otpDigits[Math.min(p.length, otpDigits.length - 1)].focus();
+  });
+});
+
+function initRecaptcha(containerId) {
+  const key = "_recaptcha_" + containerId;
+  if (window[key]) return;
+  window[key] = new firebase.auth.RecaptchaVerifier(containerId, {
+    size: "normal",
+    callback: () => {},
+    "expired-callback": () => { try { window[key].clear(); } catch {} window[key] = null; }
+  });
+  window[key].render();
+}
+
+async function enviarSms(phone, recaptchaKey) {
+  const fullPhone = "+351" + phone.replace(/^(00351|\+351)/, "").replace(/\s/g, "");
+  return await auth.signInWithPhoneNumber(fullPhone, window[recaptchaKey]);
+}
+
+// ── PASSO 1 — Nova pessoa ───────────────────────────────────
+btnSend.addEventListener("click", async () => {
+  clearErr(err1);
+  const name  = document.getElementById("inputName").value.trim();
+  const phone = document.getElementById("inputPhone").value.trim();
+  if (name.length < 2) return showErr(err1, "Introduz o teu nome (mínimo 2 caracteres).");
+  if (!isValidPtMobile(phone)) return showErr(err1, "Número inválido. Exemplo: 912345678");
+
+  btnSend.disabled = true;
+  btnSend.textContent = "A enviar…";
+  try {
+    initRecaptcha("recaptcha-container");
+    confirmationResult = await enviarSms(phone, "_recaptcha_recaptcha-container");
+    verifiedName  = name;
+    verifiedPhone = phone;
+    goToStep2(phone);
+  } catch (err) {
+    showErr(err1, traduzErro(err.code) || "Erro ao enviar o SMS. Tenta de novo.");
+    try { window["_recaptcha_recaptcha-container"]?.clear(); } catch {}
+    window["_recaptcha_recaptcha-container"] = null;
+  } finally {
+    btnSend.disabled = false;
+    btnSend.textContent = "Enviar código SMS";
+  }
+});
+
+// ── PASSO 1B — Utilizador conhecido ────────────────────────
+btnSendB.addEventListener("click", async () => {
+  clearErr(err1b);
+  btnSendB.disabled = true;
+  btnSendB.textContent = "A enviar…";
+  try {
+    initRecaptcha("recaptcha-container-b");
+    confirmationResult = await enviarSms(verifiedPhone, "_recaptcha_recaptcha-container-b");
+    goToStep2(verifiedPhone);
+  } catch (err) {
+    showErr(err1b, traduzErro(err.code) || "Erro ao enviar o SMS. Tenta de novo.");
+    try { window["_recaptcha_recaptcha-container-b"]?.clear(); } catch {}
+    window["_recaptcha_recaptcha-container-b"] = null;
+  } finally {
+    btnSendB.disabled = false;
+    btnSendB.textContent = "Enviar código SMS";
+  }
+});
+
+function goToStep2(phone) {
+  step1El.classList.remove("active");
+  step1bEl.classList.remove("active");
+  step2El.classList.add("active");
+  step2Sub.textContent = `Enviámos um código SMS para +351 ${phone}. Pode demorar alguns segundos.`;
+  clearOtp();
+  startResendTimer(60);
+}
+
+// ── PASSO 2 — Verificar código ──────────────────────────────
+btnVerify.addEventListener("click", async () => {
+  clearErr(err2); clearInfo(info2);
+  const code = getOtpValue();
+  if (code.length !== 6) return showErr(err2, "Introduz os 6 dígitos do código.");
+  if (!confirmationResult) return showErr(err2, "Sessão expirada. Volta atrás e tenta de novo.");
+
+  btnVerify.disabled = true;
+  btnVerify.textContent = "A verificar…";
+  try {
+    const cred = await confirmationResult.confirm(code);
+    const firebaseToken = await cred.user.getIdToken();
+
+    if (mesaToken) {
+      const resp = await fetch("/api/public/otp/verify-token", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ firebaseToken, mesaToken, mesaPass, name: verifiedName, phone: verifiedPhone })
+      });
+      const data = await resp.json().catch(() => ({}));
+      if (!resp.ok || !data.ok) throw new Error(data.error || "Erro no servidor.");
+    }
+
+    // ✅ Guarda com TTL de 3 dias
+    localStorage.setItem(USER_KEY, JSON.stringify({
+      name: verifiedName,
+      phone: verifiedPhone.replace(/^(00351|\+351)/, ""),
+      verifiedAt: Date.now()
+    }));
+
+    showInfo(info2, "Verificado! A entrar no menu…");
+    setTimeout(() => goToMenu(), 700);
+  } catch (err) {
+    const msg = err.message?.includes("invalid-verification-code")
+      ? "Código incorreto. Verifica e tenta de novo."
+      : traduzErro(err.code) || err.message || "Erro ao verificar o código.";
+    showErr(err2, msg);
+  } finally {
+    btnVerify.disabled = false;
+    btnVerify.textContent = "Verificar e entrar";
+  }
+});
+
+// Reenviar
+btnResend.addEventListener("click", async () => {
+  clearErr(err2); clearInfo(info2);
+  btnResend.disabled = true;
+  try {
+    const key = verifiedPhone === existingUser?.phone
+      ? "_recaptcha_recaptcha-container-b"
+      : "_recaptcha_recaptcha-container";
+    try { window[key]?.clear(); } catch {}
+    window[key] = null;
+    const containerId = key.replace("_recaptcha_", "");
+    initRecaptcha(containerId);
+    confirmationResult = await enviarSms(verifiedPhone, key);
+    showInfo(info2, "Novo código enviado!");
+    clearOtp();
+    startResendTimer(60);
+  } catch (err) {
+    showErr(err2, traduzErro(err.code) || "Erro ao reenviar.");
+    btnResend.disabled = false;
+  }
+});
+
+// Voltar
+btnBack.addEventListener("click", () => {
+  clearErr(err2); clearInfo(info2);
+  clearInterval(timerInterval);
+  timerWrap.style.display = "none";
+  step2El.classList.remove("active");
+  if (existingUser?.name && existingUser?.phone) {
+    step1bEl.classList.add("active");
+  } else {
+    step1El.classList.add("active");
+  }
+});
+
+function traduzErro(code) {
+  const map = {
+    "auth/invalid-phone-number":      "Número de telemóvel inválido.",
+    "auth/too-many-requests":         "Demasiadas tentativas. Aguarda alguns minutos.",
+    "auth/invalid-verification-code": "Código incorreto. Tenta de novo.",
+    "auth/code-expired":              "O código expirou. Pede um novo.",
+    "auth/quota-exceeded":            "Limite de SMS atingido. Contacta o staff.",
+    "auth/captcha-check-failed":      "Verificação reCAPTCHA falhou. Tenta de novo.",
+    "auth/network-request-failed":    "Sem ligação à internet.",
+    "auth/session-expired":           "Sessão expirada. Volta atrás e tenta de novo.",
+  };
+  return map[code] || null;
+}
+</script>
+</body>
+</html>
