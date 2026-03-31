@@ -1580,4 +1580,6 @@ app.use(express.static(path.join(__dirname, "public")));
 purgeOldPaidClosedOrders();
 setInterval(purgeOldPaidClosedOrders, 60 * 60 * 1000);
 
-module.exports = app;
+app.listen(process.env.PORT || 3000, "0.0.0.0", () => {
+  console.log(`✅ A correr na porta ${process.env.PORT || 3000}`);
+});
