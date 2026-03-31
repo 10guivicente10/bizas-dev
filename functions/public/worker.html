@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <title>Painel do Trabalhador — Bizas & Bar</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="worker.css" />
+  <link rel="icon" type="image/jpeg" href="/bizaslogobranco.png" />
+</head>
+<body>
+  <div class="wrap">
+
+    <header class="hdr">
+      <div>
+        <h1>🍺 Bizas &amp; Bar</h1>
+        <p>Painel do Trabalhador — Pedidos</p>
+
+        <div class="filters">
+          <button type="button" class="chip active" data-filter="abertos">Abertos</button>
+          <button type="button" class="chip" data-filter="pago">Pagos</button>
+          <button type="button" class="chip" data-filter="nao_pago">Não pagos</button>
+          <button type="button" class="chip" data-filter="produtos">Produtos</button>
+        </div>
+
+        <div id="searchProdutosWrap" style="display:none; margin-top:10px;">
+          <input
+            type="search"
+            id="searchProdutos"
+            placeholder="Pesquisar produto ou categoria..."
+            autocomplete="off"
+            style="width:100%; padding:10px 14px; border:1px solid #e7ded3; border-radius:12px; font-size:14px; outline:none;"
+          />
+        </div>
+      </div>
+
+      <div class="right">
+        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end;">
+          <span class="pill" id="orderingPill" title="Estado global para aceitar pedidos">Mesas: —</span>
+
+          <button type="button" class="btn" id="btnOpenOrdering" style="padding:10px 14px; border-radius:999px; font-weight:900;">
+            Abrir mesas
+          </button>
+
+          <button type="button" class="btn danger" id="btnCloseOrdering" style="padding:10px 14px; border-radius:999px; font-weight:900;">
+            Fechar mesas
+          </button>
+        </div>
+
+        <div style="display:flex; gap:10px; align-items:center; justify-content:flex-end; margin-top:10px;">
+          <span class="pill">Funcionario</span>
+          <button id="btnLogout" class="ghost" type="button">Sair</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="main">
+      <section class="card">
+        <div class="card-h">
+          <h2 id="mainTitle">📋 Pedidos</h2>
+          <span class="muted" id="lastUpdate">—</span>
+        </div>
+
+        <div class="orders-empty hidden" id="ordersEmpty">
+          Ainda não há pedidos.
+        </div>
+
+        <div class="orders" id="ordersList"></div>
+      </section>
+
+      <div class="modal" id="orderModal" aria-hidden="true">
+        <div class="sheet" role="dialog" aria-modal="true" aria-label="Detalhes do pedido">
+          <div class="sheet-h">
+            <div>
+              <div class="sheet-title" id="modalTitle">Pedido</div>
+              <div class="sheet-sub" id="modalSub">—</div>
+            </div>
+
+            <div class="sheet-actions">
+              <button type="button" class="ghost" id="btnCloseModal">Fechar</button>
+            </div>
+          </div>
+
+          <div class="sheet-body">
+            <div class="order-items" id="modalItems"></div>
+
+            <div class="order-notes hidden" id="modalNotesWrap">
+              <div class="label">Notas</div>
+              <div class="notes" id="modalNotes"></div>
+            </div>
+
+            <div class="order-total" id="modalTotal"></div>
+          </div>
+
+          <div class="sheet-footer" id="modalFooter">
+            <div class="status-actions">
+              <button type="button" class="btn primary" data-setstatus="pronto">Servido</button>
+              <button type="button" class="btn danger" data-setstatus="cancelado">Apagar pedido</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+  </div>
+
+  <script>
+    document.getElementById("btnLogout").addEventListener("click", async () => {
+      try { await fetch("/api/logout", { method: "POST" }); } catch {}
+      window.location.href = "/login.html";
+    });
+  </script>
+
+  <script src="worker.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Login — Admin</title>
+  <link rel="icon" type="image/jpeg" href="/bizaslogobranco.png" />
+
+  <!-- ✅ Liga o CSS -->
+  <link rel="stylesheet" href="login.css">
+</head>
+
+<body>
+  <div class="card">
+    <div class="brand">
+      <h1>Bizas &amp; Bar</h1>
+      <p>Entrar no painel</p>
+    </div>
+
+    <form id="loginForm" class="form">
+      <label>Nome</label>
+      <input name="username" placeholder="Nome" required />
+
+      <label>Palavra-passe</label>
+      <input name="password" placeholder="Palavra-passe" type="password" required />
+
+      <button type="submit">Entrar</button>
+    </form>
+
+    <p id="err" class="err"></p>
+    <div class="help">Se não tiveres acesso, fala com o gerente.</div>
+  </div>
+
+  <script src="login.js" defer></script>
+</body>
+</html>

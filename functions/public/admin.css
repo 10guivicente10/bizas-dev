@@ -1,0 +1,388 @@
+:root{
+  --bg:#f6f1ea;
+  --card:#fff;
+  --ink:#2d2a26;
+  --muted:#7a7167;
+  --line:#e7ded3;
+  --accent:#f07b1a;
+  --danger:#c0392b;
+  --shadow: 0 8px 30px rgba(0,0,0,.06);
+
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+}
+
+*{ box-sizing: border-box; }
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+}
+
+.wrap{
+  max-width:980px;
+  margin:0 auto;
+  padding:18px;
+}
+
+.hdr{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  padding:14px 14px;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:18px;
+  box-shadow: var(--shadow);
+}
+
+.hdr h1{ margin:0; font-size:20px; }
+.hdr p{ margin:6px 0 0; color:var(--muted); font-size:12px; }
+
+.right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding-top: 2px;
+}
+
+.pill{
+  padding:6px 10px;
+  border-radius:999px;
+  background:#ffe7d4;
+  color:#a84f0e;
+  font-weight:800;
+  font-size:12px;
+}
+
+/* -------------------- NOVO: Tabs -------------------- */
+
+.admin-tabs{
+  display:flex;
+  gap:10px;
+  margin-top: 12px;
+}
+
+.tab-btn{
+  padding:10px 14px;
+  border-radius:999px;
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--ink);
+  font-weight:900;
+  cursor:pointer;
+  transition: background .12s ease, transform .06s ease;
+}
+
+.tab-btn:active{
+  transform: scale(.98);
+}
+
+.tab-btn.active{
+  background: var(--accent);
+  border-color: transparent;
+  color:#fff;
+}
+
+.hidden{
+  display:none !important;
+}
+
+/* -------------------- Cards / Form -------------------- */
+
+.card{
+  margin-top:16px;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:14px;
+  box-shadow: var(--shadow);
+}
+
+.card-h{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.card-h h2{ margin:0; font-size:16px; }
+
+button{
+  padding:10px 12px;
+  border:0;
+  border-radius:12px;
+  background:var(--accent);
+  color:#fff;
+  font-weight:800;
+  cursor:pointer;
+}
+
+button.ghost{
+  background:#fff;
+  color:var(--ink);
+  border:1px solid var(--line);
+}
+
+button.danger{
+  background:var(--danger);
+}
+
+input, select{
+  width: 100%;
+  padding:10px 12px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  outline:none;
+}
+
+label{
+  display:block;
+  font-size:12px;
+  color:var(--muted);
+  margin-bottom:6px;
+}
+
+.field{ display:flex; flex-direction:column; gap:0; }
+
+.form-cat{
+  display:flex;
+  flex-direction:column;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.image-preview{
+  display:none;
+}
+
+.image-preview.show{
+  display:block;
+}
+
+.preview-box{
+  border: 1px dashed var(--line);
+  border-radius: 16px;
+  padding: 12px;
+  background: #fff;
+  display:flex;
+  flex-direction:column;
+  gap: 10px;
+}
+
+.preview-hint{
+  font-size:12px;
+  color: var(--muted);
+}
+
+.preview-box img{
+  width: 100%;
+  max-height: 180px;
+  object-fit: contain;
+  border-radius: 12px;
+  background: #faf7f3;
+  border: 1px solid var(--line);
+}
+
+.actions-row{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.muted{
+  color:var(--muted);
+  font-size:12px;
+}
+
+.list{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin-top: 10px;
+}
+
+/* -------------------- Categorias -------------------- */
+
+.cat-card{
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:12px;
+  display:flex;
+  gap:12px;
+  align-items:flex-start;
+}
+
+.cat-img{
+  width:72px;
+  height:72px;
+  border-radius:14px;
+  border:1px solid var(--line);
+  background:#faf7f3;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+
+.cat-main{
+  flex: 1;
+  min-width: 0;
+}
+
+.cat-title{
+  font-weight:900;
+}
+
+.cat-sub{
+  margin-top:2px;
+  font-size:12px;
+  color:var(--muted);
+}
+
+.cat-items{
+  margin-top:8px;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.cat-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  font-size:13px;
+  padding:8px 10px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:#fff;
+}
+
+/* ✅ lado direito do item (preço + botões) */
+.item-right{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex: 0 0 auto;
+}
+
+/* Preço com largura mínima para alinhar */
+.item-right strong{
+  min-width: 64px;
+  text-align: right;
+}
+
+/* ✅ botões pequenos no item */
+.cat-item .ghost{
+  padding:8px 10px;
+  border-radius:12px;
+  font-weight:800;
+  font-size:12px;
+  line-height: 1;
+}
+
+/* ✅ "Apagar" com tom vermelho mas estilo ghost */
+.cat-item .item-del{
+  border-color: rgba(192, 57, 43, .35);
+  color: #b4232c;
+}
+.cat-item .item-del:hover{
+  background: rgba(192, 57, 43, .08);
+}
+
+.cat-actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+
+/* -------------------- Modal simples -------------------- */
+
+.modal-backdrop{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.25);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding: 18px;
+  z-index: 50;
+}
+
+.modal{
+  width: min(520px, 100%);
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  padding: 14px;
+}
+
+.modal-h{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom: 10px;
+}
+
+.modal-h h3{
+  margin:0;
+  font-size: 16px;
+}
+
+.modal-form{
+  display:grid;
+  grid-template-columns: 1.2fr .6fr;
+  gap:10px;
+}
+
+@media (max-width: 600px){
+  .hdr{
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .right{
+    justify-content: flex-end;
+  }
+
+  .admin-tabs{
+    flex-wrap: wrap;
+  }
+
+  .modal-form{ grid-template-columns:1fr; }
+
+  /* ✅ em mobile: botões do item descem se não houver espaço */
+  .item-right{
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  .item-right strong{
+    min-width: auto;
+  }
+}
+
+.modal-actions{
+  margin-top: 12px;
+  display:flex;
+  gap:10px;
+  justify-content:flex-end;
+  flex-wrap:wrap;
+}
+
+button.ghost.danger {
+  color: #ffffff;
+}
+
+button.ghost.danger {
+  color: #ffffff;
+  background-color: #e53e3e;
+  border-color: #e53e3e;
+}
+
+button.ghost.danger:hover {
+  background-color: #c53030;
+  border-color: #c53030;
+}

@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Bizas & Bar — Menu Digital</title>
+  <link rel="icon" type="image/jpeg" href="/bizaslogobranco.png" />
+
+  <!-- IMPORTANTE: paths absolutos -->
+  <link rel="stylesheet" href="/index.css">
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="top-row">
+        <div class="title">
+          <img src="/bizaslogo.png" style="height:48px;object-fit:contain;" alt="Bizas & Bar" />
+        </div>
+      </div>
+
+      <div class="categories-wrap">
+        <div class="categories" role="tablist" aria-label="Categorias">
+          <button class="chip active" type="button" role="tab" aria-selected="true" data-cat="bebida">
+            🥤 Bebida
+          </button>
+          <button class="chip" type="button" role="tab" aria-selected="false" data-cat="comida">
+            🍽️ Comida
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="main">
+      <div class="section-header">
+        <h2 id="sectionTitle"></h2>
+        <span class="count" id="countText"></span>
+      </div>
+
+      <div class="empty-state">
+        <h3 id="emptyTitle">Sem produtos por agora</h3>
+        <p id="emptyText">Os itens de bebida vão aparecer aqui.</p>
+      </div>
+    </main>
+  </div>
+
+  <!-- IMPORTANTE: path absoluto -->
+  <script src="/index.js" defer></script>
+</body>
+</html>
